@@ -44,6 +44,10 @@ build_docker_simple_image(){
 
 upsert_docker_compose_file() {
     echo "
+version: 3
+services:
+  hello_world:
+    image: hello-world
 " > docker-compose.yml
 }
 
