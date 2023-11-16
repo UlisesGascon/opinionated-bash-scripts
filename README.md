@@ -38,4 +38,4 @@ Note: You can replace `curl` by copying the script and pasting it in your termin
 
 Feel free to open an issue if you have any questions or suggestions but please note that I may not be able to help you with your specific use case.
 
-:warning: If you want to contribute code, please open a pull request. I will review it as soon as I can, but take into account that this is a side project and it is very opinionated, so I may not accept your changes if they don't fit my use case. :warning:
+:warning: If you want to contribute code, please open a pull request. I will review it as soon as I can, but take into account that this is a side project and it is very opinionated, so I may not accept your changes if they don't fit my use case.
