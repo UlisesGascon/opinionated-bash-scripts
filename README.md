@@ -4,6 +4,22 @@ These are scripts that I use for my projects :rainbow:.
 
 They are opinionated and may not be useful for you, but feel free to use them as you wish, even if it's just for inspiration. :tanabata_tree:
 
+## Usage
+
+```bash
+# Download and load the script
+curl https://raw.githubusercontent.com/UlisesGascon/opinionated-bash-scripts/scripts/git.sh > git_utils.sh
+source git_utils.sh
+
+# Use them
+mkdir test
+cd test
+git_clone_public_project https://github.com/UlisesGascon/opinionated-bash-scripts
+git_checkout_branch opinionated-bash-scripts main
+```
+
+
+Note: You can replace `curl` by copying the script and pasting it in your terminal.
 
 ## Contributing :steam_locomotive:
 
