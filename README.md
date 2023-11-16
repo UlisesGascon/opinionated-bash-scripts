@@ -8,7 +8,7 @@ They are opinionated and may not be useful for you, but feel free to use them as
 
 ```bash
 # Download and load the script
-curl https://raw.githubusercontent.com/UlisesGascon/opinionated-bash-scripts/scripts/git.sh > git_utils.sh
+curl https://raw.githubusercontent.com/UlisesGascon/opinionated-bash-scripts/main/scripts/git.sh --output git_utils.sh
 source git_utils.sh
 
 # Use them
