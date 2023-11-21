@@ -8,7 +8,7 @@ load_secrets () {
     else
         echo "ERROR: $file file does not exist."
         echo "SOLUTION: Please create a $file file with the minimum values expected and try again."
-        exit 1
+        return 1
     fi
 }
 
@@ -16,7 +16,7 @@ check_secrets(){
     echo "INFO: Checking for expected environment variables..."
     if [ -z "$MY_SECRET" ]; then
         echo "ERROR: The environment variable MY_SECRET is not set"
-        exit 1
+        return 1
     fi
 
     echo "OK: Expected environment variables are set."
