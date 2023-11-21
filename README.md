@@ -4,7 +4,7 @@ These are scripts that I use for my projects :rainbow:.
 
 They are opinionated and may not be useful for you, but feel free to use them as you wish, even if it's just for inspiration. :tanabata_tree:
 
-## Usage
+## Usage directly from GitHub
 
 ```bash
 echo "------------[LOAD DEPENDENCIES]-----------"
@@ -33,6 +33,10 @@ The output should be something like this:
 ![bash terminal output](.github/other/terminal_output.png)
 
 Note: You can replace `curl` by copying the script and pasting it in your terminal.
+
+## Usage as Docker image
+
+You can use [UlisesGascon/development-toolkit](https://github.com/UlisesGascon/development-toolkit). In this image you will find all the scripts ready to be used. [Documentation](https://github.com/UlisesGascon/development-toolkit#notes)
 
 ## Contributing :steam_locomotive:
 
