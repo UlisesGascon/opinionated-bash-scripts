@@ -2,7 +2,7 @@ check_git_installed (){
     if ! git --version > /dev/null 2>&1; then
         echo "ERROR: git is not installed"
         echo "SOLUTION: please install git and try again!"
-        exit 1
+        return 1
     fi
 }
 
@@ -35,13 +35,13 @@ git_checkout_branch() {
         else
             echo "ERROR: Branch $branch does not exist in $folder"
             echo "SOLUTION: Check the branch name and try again"
-            exit 1
+            return 1
         fi
         cd ..
     else
         echo "ERROR: $folder is not a git repository"
         echo "SOLUTION: Please check that the folder includes git historial and try again"
-        exit 1
+        return 1
     fi
 }
 

@@ -2,7 +2,7 @@ check_docker_running(){
     if ! docker info > /dev/null 2>&1; then
         echo "ERROR: docker engine isn't running"
         echo "SOLUTION: please start docker and try again!"
-        exit 1
+        return 1
     fi
 }
 
@@ -12,7 +12,7 @@ check_docker_compose_installed(){
     else
         echo "ERROR: Docker-compose is not installed"
         echo "SOLUTION: Please install docker-compose and try again"
-        exit 1
+        return 1
     fi
 }
 
@@ -22,7 +22,7 @@ check_docker_installed(){
     else
         echo "ERROR: Docker is not running"
         echo "ERROR: Please start docker and try again"
-        exit 1
+        return 1
     fi
 }
 
@@ -77,6 +77,6 @@ check_docker_container_running_by_image_used () {
         echo "OK: Docker container running image $image is running"
     else
         echo "ERROR: Docker container running image $image is not running"
-        exit 1
+        return 1
     fi
 }

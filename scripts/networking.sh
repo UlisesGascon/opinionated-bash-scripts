@@ -2,7 +2,7 @@ check_netstat_installed(){
     if ! netstat --version > /dev/null 2>&1; then
         echo "ERROR: netstat is not installed"
         echo "SOLUTION: install the dependency and try again!"
-        exit 1
+        return 1
     fi
 }
 
@@ -11,7 +11,7 @@ check_curl_installed(){
     if ! curl --version > /dev/null 2>&1; then
         echo "ERROR: curl is not installed"
         echo "SOLUTION: install the dependency and try again!"
-        exit 1
+        return 1
     fi
 }
 
@@ -22,7 +22,7 @@ check_http_availability(){
     else
         echo "ERROR: Server is not running on $url"
         echo "SOLUTION: Please check the logs and try again."
-        exit 1
+        return 1
     fi
 }
 
@@ -31,7 +31,7 @@ check_local_mqtt_availability(){
         echo "OK: Mosquitto is running on port 1883"
     else
         echo "ERROR: Mosquitto is not running on port 1883"
-        exit 1
+        return 1
     fi
 }
 
@@ -41,6 +41,6 @@ check_local_websockets_availability(){
         echo "OK: Websocket is running on port $port"
     else
         echo "ERROR: Websocket is not running on port $port"
-        exit 1
+        return 1
     fi
 }
