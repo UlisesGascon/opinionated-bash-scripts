@@ -15,12 +15,14 @@ load_secrets () {
     fi
 }
 
-check_secrets(){
-    echo "INFO: Checking for expected environment variables..."
-    if [ -z "$MY_SECRET" ]; then
-        echo "ERROR: The environment variable MY_SECRET is not set"
-        return 1
-    fi
-
-    echo "OK: Expected environment variables are set."
+check_secrets() {
+    for var in "$@"; do
+        if [ -z "${!var}" ]; then
+            echo "ERROR: $var is not set."
+            echo "SOLUTION: Please set the $var environment variable."
+            return 1
+        else
+            echo "OK: $var is set."
+        fi
+    done
 }

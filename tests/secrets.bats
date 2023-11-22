@@ -6,12 +6,16 @@ setup() {
     # Create a temporary .env file for testing
     echo "MY_SECRET=test" > .env
     echo "MY_OTHER_SECRET=test" >> secrets
+    export TEST_SECRET_ONE=one
+    export TEST_SECRET_TWO=two
 }
 
 teardown() {
     # Remove the temporary .env file after testing
     rm .env
     rm secrets
+    unset TEST_SECRET_ONE
+    unset TEST_SECRET_TWO
 }
 
 @test "load_secrets loads secrets from .env file correctly" {
@@ -41,6 +45,20 @@ teardown() {
     [[ "${lines[2]}" == "SOLUTION: Please create a notfound file with the minimum values expected and try again." ]]
 }
 
+@test "check_secrets returns success if all environment variables are set" {
+    run check_secrets TEST_SECRET_ONE TEST_SECRET_TWO
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "OK: TEST_SECRET_ONE is set." ]]
+    [[ "${lines[1]}" == "OK: TEST_SECRET_TWO is set." ]]
+}
 
+@test "check_secrets returns error if an environment variable is not set" {
+    unset MY_SECRET
+    run check_secrets TEST_SECRET_ONE INVENTED TEST_SECRET_TWO
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "OK: TEST_SECRET_ONE is set." ]]
+    [[ "${lines[1]}" == "ERROR: INVENTED is not set." ]]
+    [[ "${lines[2]}" == "SOLUTION: Please set the INVENTED environment variable." ]]
+}
 
 
