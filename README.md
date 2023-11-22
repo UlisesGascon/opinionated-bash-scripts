@@ -19,7 +19,7 @@ echo "------------------------------------------"
 
 echo "------------[CLONE THE PROJECT]-----------"
 git_clone_public_project https://github.com/UlisesGascon/opinionated-bash-scripts
-git_checkout_branch opinionated-bash-scripts main
+git_checkout_branch main opinionated-bash-scripts
 echo "------------------------------------------"
 
 echo "----------------[CLEAN UP]----------------"
