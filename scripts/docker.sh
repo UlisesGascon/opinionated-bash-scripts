@@ -29,9 +29,9 @@ check_docker_installed(){
 }
 
 build_docker_simple_image(){
-    folder=$1
-    image_name=$2
-    dockerfile=$3
+    image_name=$1
+    dockerfile=$2
+    folder=$3
 
     echo "INFO: Building docker image..."
 
@@ -39,7 +39,11 @@ build_docker_simple_image(){
         dockerfile="Dockerfile"
         echo "INFO: Dockerfile not defined, using $dockerfile as default"
     fi
-    cd "$folder" || return 1
+
+    if [ -n "$folder" ]; then
+        cd "$folder" || return 1
+    fi
+
     docker build -t "$image_name":latests -f "$dockerfile" .
     echo "OK: Docker image built."
 }   
