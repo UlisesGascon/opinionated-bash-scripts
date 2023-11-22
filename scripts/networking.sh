@@ -34,10 +34,10 @@ check_http_availability(){
 }
 
 check_local_mqtt_availability(){
-    if netstat -lnt | awk '$6 == "LISTEN" && $4 ~ ".1883"' >/dev/null; then
-        echo "OK: Mosquitto is running on port 1883"
+    if netstat -lnt | grep ':1883 .*LISTEN' >/dev/null; then
+        echo "OK: MQTT is running on port 1883"
     else
-        echo "ERROR: Mosquitto is not running on port 1883"
+        echo "ERROR: MQTT is not running on port 1883"
         return 1
     fi
 }
