@@ -99,6 +99,36 @@ teardown() {
     [[ "${lines[1]}" == "ERROR: Please start docker and try again" ]]
 }
 
+@test "build_docker_simple_image builds image with provided Dockerfile" {
+    run build_docker_simple_image "test_image" "TestDockerfile"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Building docker image..." ]]
+    [[ "${lines[1]}" == "OK: Docker image built." ]]
+}
+
+@test "build_docker_simple_image builds image with default Dockerfile if none provided" {
+    run build_docker_simple_image "test_image"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Building docker image..." ]]
+    [[ "${lines[1]}" == "INFO: Dockerfile not defined, using Dockerfile as default" ]]
+    [[ "${lines[2]}" == "OK: Docker image built." ]]
+}
+
+@test "build_docker_simple_image returns error if cd to provided folder fails" {
+    # Mock cd command to simulate failure
+    cd() {
+        return 1
+    }
+    export -f cd
+
+    run build_docker_simple_image "test_image" "TestDockerfile" "nonexistent_folder"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "INFO: Building docker image..." ]]
+
+    # Unset mock cd command
+    unset -f cd
+}
+
 @test "upsert_docker_compose_file creates docker-compose.yml file" {
     run upsert_docker_compose_file
     [ "$status" -eq 0 ]
