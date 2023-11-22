@@ -21,6 +21,16 @@ git_clone_public_project (){
 
 git_clone_private_project (){
     repo_url=$1
+    if [ -z "$repo_url" ]; then
+        echo "ERROR: No repository URL provided"
+        return 1
+    fi
+
+    if [ -z "$GIT_USER" ] || [ -z "$GIT_PASS" ]; then
+        echo "ERROR: GIT_USER or GIT_PASS is not set"
+        return 1
+    fi
+
     echo "INFO: Cloning $repo_url"
     git clone https://"$GIT_USER":"$GIT_PASS"@"$repo_url"
     echo "OK: $repo_url cloned."

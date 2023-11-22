@@ -56,3 +56,25 @@ teardown() {
     [[ "${lines[0]}" == "INFO: Cloning https://github.com/user/repo.git" ]]
     [[ "${lines[1]}" == "OK: https://github.com/user/repo.git cloned." ]]
 }
+
+@test "git_clone_private_project returns error if no repository URL is provided" {
+    run git_clone_private_project
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "ERROR: No repository URL provided" ]]
+}
+
+@test "git_clone_private_project returns error if GIT_USER or GIT_PASS is not set" {
+    run git_clone_private_project "https://github.com/user/repo.git"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "ERROR: GIT_USER or GIT_PASS is not set" ]]
+}
+
+@test "git_clone_private_project clones repository if repository URL, GIT_USER, and GIT_PASS are provided" {
+    GIT_USER="testuser"
+    GIT_PASS="testpass"
+    run git_clone_private_project "https://github.com/user/repo.git"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Cloning https://github.com/user/repo.git" ]]
+    [[ "${lines[1]}" == "OK: https://github.com/user/repo.git cloned." ]]
+}
+}
