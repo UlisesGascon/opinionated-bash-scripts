@@ -45,16 +45,16 @@ teardown() {
     [[ "${lines[2]}" == "SOLUTION: Please create a notfound file with the minimum values expected and try again." ]]
 }
 
-@test "check_secrets returns success if all environment variables are set" {
-    run check_secrets TEST_SECRET_ONE TEST_SECRET_TWO
+@test "check_environmental_variables returns success if all environment variables are set" {
+    run check_environmental_variables TEST_SECRET_ONE TEST_SECRET_TWO
     [ "$status" -eq 0 ]
     [[ "${lines[0]}" == "OK: TEST_SECRET_ONE is set." ]]
     [[ "${lines[1]}" == "OK: TEST_SECRET_TWO is set." ]]
 }
 
-@test "check_secrets returns error if an environment variable is not set" {
+@test "check_environmental_variables returns error if an environment variable is not set" {
     unset MY_SECRET
-    run check_secrets TEST_SECRET_ONE INVENTED TEST_SECRET_TWO
+    run check_environmental_variables TEST_SECRET_ONE INVENTED TEST_SECRET_TWO
     [ "$status" -eq 1 ]
     [[ "${lines[0]}" == "OK: TEST_SECRET_ONE is set." ]]
     [[ "${lines[1]}" == "ERROR: INVENTED is not set." ]]

@@ -15,7 +15,7 @@ load_secrets () {
     fi
 }
 
-check_secrets() {
+check_environmental_variables() {
     for var in "$@"; do
         if [ -z "${!var}" ]; then
             echo "ERROR: $var is not set."
