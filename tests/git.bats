@@ -42,3 +42,17 @@ teardown() {
     [[ "${lines[0]}" == "ERROR: git is not installed" ]]
     [[ "${lines[1]}" == "SOLUTION: please install git and try again!" ]]
 }
+
+
+@test "git_clone_public_project returns error if no repository URL is provided" {
+    run git_clone_public_project
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "ERROR: No repository URL provided" ]]
+}
+
+@test "git_clone_public_project clones repository if repository URL is provided" {
+    run git_clone_public_project "https://github.com/user/repo.git"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Cloning https://github.com/user/repo.git" ]]
+    [[ "${lines[1]}" == "OK: https://github.com/user/repo.git cloned." ]]
+}

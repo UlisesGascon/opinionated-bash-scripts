@@ -10,6 +10,10 @@ check_git_installed (){
 
 git_clone_public_project (){
     repo_url=$1
+    if [ -z "$repo_url" ]; then
+        echo "ERROR: No repository URL provided"
+        return 1
+    fi
     echo "INFO: Cloning $repo_url"
     git clone "$repo_url"
     echo "OK: $repo_url cloned."
