@@ -1,3 +1,5 @@
+#!/bin/bash
+
 load_secrets () {
     file=${1:-.env}
     echo "INFO: Loading secrets from $file file..."
