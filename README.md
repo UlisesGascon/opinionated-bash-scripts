@@ -19,7 +19,7 @@ echo "------------------------------------------"
 
 echo "------------[CLONE THE PROJECT]-----------"
 git_clone_public_project https://github.com/UlisesGascon/opinionated-bash-scripts
-git_checkout_branch opinionated-bash-scripts main
+git_checkout_branch main opinionated-bash-scripts
 echo "------------------------------------------"
 
 echo "----------------[CLEAN UP]----------------"
@@ -37,6 +37,31 @@ Note: You can replace `curl` by copying the script and pasting it in your termin
 ## Usage as Docker image
 
 You can use [UlisesGascon/development-toolkit](https://github.com/UlisesGascon/development-toolkit). In this image you will find all the scripts ready to be used. [Documentation](https://github.com/UlisesGascon/development-toolkit#notes)
+
+## Development
+
+### Requirements
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [GNU Make](https://www.gnu.org/software/make/)
+- [Bash](https://www.gnu.org/software/bash/)
+- [ShellCheck](https://www.shellcheck.net/)
+- [Bats Core](https://github.com/bats-core/bats-core)
+- [Hadolint](https://github.com/hadolint/hadolint)
+
+### Commands
+
+#### Test
+
+```bash
+make test
+```
+
+#### Lint
+
+```bash
+make lint
+```
 
 ## Contributing :steam_locomotive:
 
