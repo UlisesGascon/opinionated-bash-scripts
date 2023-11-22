@@ -3,9 +3,10 @@
 load_secrets () {
     file=${1:-.env}
     echo "INFO: Loading secrets from $file file..."
-    if [ -f $file ]; then
+    if [ -f "$file" ]; then
         echo "INFO: $file file found"
-        source $file
+        # shellcheck disable=SC1090
+        source "$file"
         echo "OK: secrets loaded from $file file."
     else
         echo "ERROR: $file file does not exist."
