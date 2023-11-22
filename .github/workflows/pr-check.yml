@@ -19,4 +19,4 @@ jobs:
       run: make lint
 
     - name: Test
-      run: make test
+      run: make test-ci
