@@ -77,4 +77,46 @@ teardown() {
     [[ "${lines[0]}" == "INFO: Cloning https://github.com/user/repo.git" ]]
     [[ "${lines[1]}" == "OK: https://github.com/user/repo.git cloned." ]]
 }
+
+@test "git_checkout_branch returns error if no branch is provided" {
+    run git_checkout_branch
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "ERROR: Please provide a branch name" ]]
+}
+
+@test "git_checkout_branch returns error if branch does not exist" {
+    # Mock git command
+    git() {
+        if [[ $1 == "show-ref" && $2 == "--verify" && $3 == "--quiet" && $4 == refs/heads/* ]]; then
+            return 1
+        else
+            return 0
+        fi
+    }
+    export -f git
+
+    mkdir -p test/.git
+    run git_checkout_branch "nonexistentbranch" "test"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "INFO: Checking out to branch nonexistentbranch in test..." ]]
+    [[ "${lines[1]}" == "ERROR: Branch nonexistentbranch does not exist in test" ]]
+    [[ "${lines[2]}" == "SOLUTION: Check the branch name and try again" ]]
+    rm -rf test
+
+    unset -f git
+}
+
+@test "git_checkout_branch checks out to branch if branch and folder are provided" {
+    run git_checkout_branch "testbranch" "test"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Checking out to branch testbranch in test..." ]]
+    [[ "${lines[1]}" == "OK: Branch testbranch checked out in test" ]]
+}
+
+@test "git_checkout_branch returns error if folder is not a git repository" {
+    run git_checkout_branch "testbranch" "test2"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "INFO: Checking out to branch testbranch in test2..." ]]
+    [[ "${lines[1]}" == "ERROR: test2 is not a git repository" ]]
+    [[ "${lines[2]}" == "SOLUTION: Please check that the folder includes git historial and try again" ]]
 }

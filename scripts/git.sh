@@ -37,11 +37,15 @@ git_clone_private_project (){
 }
 
 git_checkout_branch() {
-    folder=$1
-    branch=$2
-    
-    echo "INFO: Checking out to branch $branch in $folder..."
+    branch=$1
+    folder=${2:-$(pwd)}
 
+    if [ -z "$branch" ]; then
+        echo "ERROR: Please provide a branch name"
+        return 1
+    fi
+
+    echo "INFO: Checking out to branch $branch in $folder..."
     if [ -d "$folder/.git" ]; then
         cd "$folder" || return 1
         git fetch && git pull --all
