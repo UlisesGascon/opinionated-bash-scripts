@@ -35,12 +35,12 @@ build_docker_simple_image(){
 
     echo "INFO: Building docker image..."
 
-    if [ -z "$dockerfile" ] then
+    if [ -z "$dockerfile" ]; then
         dockerfile="Dockerfile"
         echo "INFO: Dockerfile not defined, using $dockerfile as default"
     fi
-    cd $folder
-    docker build -t $image_name:latests -f $dockerfile .
+    cd "$folder" || return 1
+    docker build -t "$image_name":latests -f "$dockerfile" .
     echo "OK: Docker image built."
 }   
 

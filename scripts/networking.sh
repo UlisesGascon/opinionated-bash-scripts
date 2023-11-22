@@ -18,8 +18,13 @@ check_curl_installed(){
 }
 
 check_http_availability(){
-    url = $1
-    if curl --output /dev/null --silent --head --fail $url; then
+    url="$1"
+
+    if [ -z "$url" ]; then
+        return 1
+    fi
+
+    if curl --output /dev/null --silent --head --fail "$url"; then
         echo "OK: Server is running on $url"
     else
         echo "ERROR: Server is not running on $url"
