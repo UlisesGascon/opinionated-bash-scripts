@@ -9,6 +9,14 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
+
+    - name: Run Hadolint
+      uses: hadolint/hadolint-action@v3.1.0
+      with:
+        dockerfile: Dockerfile.test
     
     - name: Lint
       run: make lint
+
+    - name: Test
+      run: make test-ci
