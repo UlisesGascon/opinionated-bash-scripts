@@ -1,3 +1,5 @@
+#!/bin/bash
+
 check_directory() {
     if [ -d "$1" ]; then
         echo "OK: Directory $1 exists."

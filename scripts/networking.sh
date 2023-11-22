@@ -1,3 +1,5 @@
+#!/bin/bash
+
 check_netstat_installed(){
     if ! netstat --version > /dev/null 2>&1; then
         echo "ERROR: netstat is not installed"

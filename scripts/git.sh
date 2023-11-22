@@ -1,3 +1,5 @@
+#!/bin/bash
+
 check_git_installed (){
     if ! git --version > /dev/null 2>&1; then
         echo "ERROR: git is not installed"

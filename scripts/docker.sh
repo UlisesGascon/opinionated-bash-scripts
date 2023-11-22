@@ -1,3 +1,5 @@
+#!/bin/bash
+
 check_docker_running(){
     if ! docker info > /dev/null 2>&1; then
         echo "ERROR: docker engine isn't running"
