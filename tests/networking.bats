@@ -101,6 +101,27 @@ teardown() {
     [ "$status" -eq 1 ]
     [[ "${lines[0]}" == "ERROR: WebSocket is not running on port 8081" ]]
 }
+
+@test "check_local_mqtt_availability returns success if MQTT is running on port 1883" {
+    run check_local_mqtt_availability
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "OK: MQTT is running on port 1883" ]]
+}
+
+@test "check_local_mqtt_availability returns error if MQTT is not running on port 1883" {
+    # Mock netstat command to simulate MQTT not running
+    netstat() {
+        if [[ $1 == "-lnt" ]]; then
+            echo ""
+        fi
+    }
+    export -f netstat
+
+    run check_local_mqtt_availability
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "ERROR: MQTT is not running on port 1883" ]]
+}
+
 @test "check_http_availability returns error if no URL is provided" {
     run check_http_availability ""
     [ "$status" -eq 1 ]
