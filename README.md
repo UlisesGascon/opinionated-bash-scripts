@@ -38,6 +38,31 @@ Note: You can replace `curl` by copying the script and pasting it in your termin
 
 You can use [UlisesGascon/development-toolkit](https://github.com/UlisesGascon/development-toolkit). In this image you will find all the scripts ready to be used. [Documentation](https://github.com/UlisesGascon/development-toolkit#notes)
 
+## Development
+
+### Requirements
+
+- [Docker](https://docs.docker.com/get-docker/)
+- [GNU Make](https://www.gnu.org/software/make/)
+- [Bash](https://www.gnu.org/software/bash/)
+- [ShellCheck](https://www.shellcheck.net/)
+- [Bats Core](https://github.com/bats-core/bats-core)
+- [Hadolint](https://github.com/hadolint/hadolint)
+
+### Commands
+
+#### Test
+
+```bash
+make test
+```
+
+#### Lint
+
+```bash
+make lint
+```
+
 ## Contributing :steam_locomotive:
 
 Feel free to open an issue if you have any questions or suggestions but please note that I may not be able to help you with your specific use case.
