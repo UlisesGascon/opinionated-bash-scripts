@@ -1,0 +1,6 @@
+FROM bats/bats:v1.10.0
+
+WORKDIR /home
+
+COPY /scripts ./scripts
+COPY /tests ./tests
