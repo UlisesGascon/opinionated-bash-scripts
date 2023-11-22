@@ -10,6 +10,10 @@ check_git_installed (){
 
 git_clone_public_project (){
     repo_url=$1
+    if [ -z "$repo_url" ]; then
+        echo "ERROR: No repository URL provided"
+        return 1
+    fi
     echo "INFO: Cloning $repo_url"
     git clone "$repo_url"
     echo "OK: $repo_url cloned."
@@ -17,17 +21,31 @@ git_clone_public_project (){
 
 git_clone_private_project (){
     repo_url=$1
+    if [ -z "$repo_url" ]; then
+        echo "ERROR: No repository URL provided"
+        return 1
+    fi
+
+    if [ -z "$GIT_USER" ] || [ -z "$GIT_PASS" ]; then
+        echo "ERROR: GIT_USER or GIT_PASS is not set"
+        return 1
+    fi
+
     echo "INFO: Cloning $repo_url"
     git clone https://"$GIT_USER":"$GIT_PASS"@"$repo_url"
     echo "OK: $repo_url cloned."
 }
 
 git_checkout_branch() {
-    folder=$1
-    branch=$2
-    
-    echo "INFO: Checking out to branch $branch in $folder..."
+    branch=$1
+    folder=${2:-$(pwd)}
 
+    if [ -z "$branch" ]; then
+        echo "ERROR: Please provide a branch name"
+        return 1
+    fi
+
+    echo "INFO: Checking out to branch $branch in $folder..."
     if [ -d "$folder/.git" ]; then
         cd "$folder" || return 1
         git fetch && git pull --all
