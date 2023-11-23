@@ -6,6 +6,6 @@ check_directory() {
     else
         echo "ERROR: Directory $1 does not exist."
         echo "ERROR: Please create the directory $1 try again."
-        return 1
+        exit 1
     fi
 }
