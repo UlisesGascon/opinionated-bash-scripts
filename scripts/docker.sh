@@ -4,7 +4,7 @@ check_docker_running(){
     if ! docker info > /dev/null 2>&1; then
         echo "ERROR: docker engine isn't running"
         echo "SOLUTION: please start docker and try again!"
-        return 1
+        exit 1
     fi
 }
 
@@ -14,7 +14,7 @@ check_docker_compose_installed(){
     else
         echo "ERROR: Docker-compose is not installed"
         echo "SOLUTION: Please install docker-compose and try again"
-        return 1
+        exit 1
     fi
 }
 
@@ -24,7 +24,7 @@ check_docker_installed(){
     else
         echo "ERROR: Docker is not running"
         echo "ERROR: Please start docker and try again"
-        return 1
+        exit 1
     fi
 }
 
@@ -41,12 +41,12 @@ build_docker_simple_image(){
     fi
 
     if [ -n "$folder" ]; then
-        cd "$folder" || return 1
+        cd "$folder" || exit 1
     fi
 
     docker build -t "$image_name":latests -f "$dockerfile" .
     echo "OK: Docker image built."
-}   
+}  
 
 upsert_docker_compose_file() {
     echo "
@@ -83,6 +83,6 @@ check_docker_container_running_by_image_used () {
         echo "OK: Docker container running image $image is running"
     else
         echo "ERROR: Docker container running image $image is not running"
-        return 1
+        exit 1
     fi
 }

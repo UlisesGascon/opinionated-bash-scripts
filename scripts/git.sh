@@ -4,7 +4,7 @@ check_git_installed (){
     if ! git --version > /dev/null 2>&1; then
         echo "ERROR: git is not installed"
         echo "SOLUTION: please install git and try again!"
-        return 1
+        exit 1
     fi
 }
 
@@ -12,7 +12,7 @@ git_clone_public_project (){
     repo_url=$1
     if [ -z "$repo_url" ]; then
         echo "ERROR: No repository URL provided"
-        return 1
+        exit 1
     fi
     echo "INFO: Cloning $repo_url"
     git clone "$repo_url"
@@ -23,12 +23,12 @@ git_clone_private_project (){
     repo_url=$1
     if [ -z "$repo_url" ]; then
         echo "ERROR: No repository URL provided"
-        return 1
+        exit 1
     fi
 
     if [ -z "$GIT_USER" ] || [ -z "$GIT_PASS" ]; then
         echo "ERROR: GIT_USER or GIT_PASS is not set"
-        return 1
+        exit 1
     fi
 
     echo "INFO: Cloning $repo_url"
@@ -42,12 +42,12 @@ git_checkout_branch() {
 
     if [ -z "$branch" ]; then
         echo "ERROR: Please provide a branch name"
-        return 1
+        exit 1
     fi
 
     echo "INFO: Checking out to branch $branch in $folder..."
     if [ -d "$folder/.git" ]; then
-        cd "$folder" || return 1
+        cd "$folder" || exit 1
         git fetch && git pull --all
         if git show-ref --verify --quiet refs/heads/"$branch"; then
             git checkout "$branch"
@@ -55,7 +55,7 @@ git_checkout_branch() {
         else
             echo "ERROR: Branch $branch does not exist in $folder"
             echo "SOLUTION: Check the branch name and try again"
-            return 1
+            exit 1
         fi
         (
             cd ..
@@ -63,7 +63,7 @@ git_checkout_branch() {
     else
         echo "ERROR: $folder is not a git repository"
         echo "SOLUTION: Please check that the folder includes git historial and try again"
-        return 1
+        exit 1
     fi
 }
 
