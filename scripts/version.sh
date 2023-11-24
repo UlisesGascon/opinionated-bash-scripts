@@ -1,6 +1,6 @@
 #!/bin/bash
 
 get_version () {
-    echo "Current version: 0.3.0"
-    echo "Source code: https://github.com/UlisesGascon/opinionated-bash-scripts/releases/tag/0.3.0"
+    echo "Current version: 0.4.0"
+    echo "Source code: https://github.com/UlisesGascon/opinionated-bash-scripts/releases/tag/0.4.0"
 }
