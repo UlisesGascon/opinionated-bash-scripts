@@ -9,7 +9,7 @@ load "$(pwd)/scripts/git.sh"
 setup() {
     # Mock git command
     git() {
-        if [[ $1 == "--version" || $1 == "clone"  || $1 == "fetch" || $1 == "pull" || $1 == "show-ref" || $1 == "checkout" ]]; then
+        if [[ $1 == "--version" || $1 == "clone"  || $1 == "fetch" || $1 == "pull" || $1 == "checkout" ]]; then
             return 0
         fi
         
@@ -87,9 +87,7 @@ teardown() {
 @test "git_checkout_branch returns error if branch does not exist" {
     # Mock git command
     git() {
-        if [[ $1 == "show-ref" && $2 == "--verify" && $3 == "--quiet" && $4 == refs/heads/* ]]; then
-            return 1
-        else
+        if [[ $1 == "ls-remote" && $2 == "--heads" && $3 == "origin" && $4 == refs/heads/nonexistentbranch ]]; then
             return 0
         fi
     }
@@ -107,10 +105,22 @@ teardown() {
 }
 
 @test "git_checkout_branch checks out to branch if branch and folder are provided" {
+    # Mock git command
+    git() {
+        if [[ $1 == "ls-remote" && $2 == "--heads" && $3 == "origin" && $4 == refs/heads/* ]]; then
+            echo "testbranch"
+        else
+            return 0
+        fi
+    }
+    export -f git
+
     run git_checkout_branch "testbranch" "test"
     [ "$status" -eq 0 ]
     [[ "${lines[0]}" == "INFO: Checking out to branch testbranch in test..." ]]
     [[ "${lines[1]}" == "OK: Branch testbranch checked out in test" ]]
+
+    unset -f git
 }
 
 @test "git_checkout_branch returns error if folder is not a git repository" {
