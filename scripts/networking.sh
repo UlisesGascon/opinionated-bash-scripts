@@ -21,6 +21,7 @@ check_http_availability(){
     url="$1"
 
     if [ -z "$url" ]; then
+        echo "ERROR: url not provided"
         exit 1
     fi
 
