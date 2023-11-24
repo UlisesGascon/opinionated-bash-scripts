@@ -128,3 +128,34 @@ teardown() {
     [[ "${lines[0]}" == "ERROR: Server is not running on http://localhost:8081" ]]
     [[ "${lines[1]}" == "SOLUTION: Please check the logs and try again." ]]
 }
+
+@test "check_websockets_availability returns success if WebSocket is running at URL" {
+    # Mock curl command to simulate successful WebSocket request
+    curl() {
+        echo "HTTP/1.1 101 Switching Protocols"
+        return 0
+    }
+    export -f curl
+
+    run check_websockets_availability "http://localhost:8080"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Checking WebSocket availability on http://localhost:8080" ]]
+    [[ "${lines[1]}" == "OK: WebSocket is running on http://localhost:8080" ]]
+}
+
+@test "check_websockets_availability returns error if WebSocket is not running at URL" {
+    # Mock curl command to simulate unsuccessful WebSocket request
+    curl() {
+        if [[ $1 == "--include" ]]; then
+            return 1
+        else
+            return 0
+        fi
+    }
+    export -f curl
+
+    run check_websockets_availability "http://localhost:8081"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "INFO: Checking WebSocket availability on http://localhost:8081" ]]
+    [[ "${lines[1]}" == "ERROR: WebSocket is not running on http://localhost:8081" ]]
+}
