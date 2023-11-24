@@ -47,19 +47,21 @@ git_checkout_branch() {
 
     echo "INFO: Checking out to branch $branch in $folder..."
     if [ -d "$folder/.git" ]; then
-        cd "$folder" || exit 1
-        git fetch && git pull --all
-        if git show-ref --verify --quiet refs/heads/"$branch"; then
-            git checkout "$branch"
-            echo "OK: Branch $branch checked out in $folder"
-        else
-            echo "ERROR: Branch $branch does not exist in $folder"
-            echo "SOLUTION: Check the branch name and try again"
-            exit 1
-        fi
         (
-            cd ..
+            cd "$folder" || exit 1
+            git fetch && git pull --all
+            exists=$(git ls-remote --heads origin "refs/heads/$branch" | wc -l)
+            
+            if [ "$exists" -eq 0 ]; then
+                echo "ERROR: Branch $branch does not exist in $folder"
+                echo "SOLUTION: Check the branch name and try again"
+                exit 1
+            else
+                git checkout "$branch"
+                echo "OK: Branch $branch checked out in $folder"
+            fi
         )
+
     else
         echo "ERROR: $folder is not a git repository"
         echo "SOLUTION: Please check that the folder includes git historial and try again"
