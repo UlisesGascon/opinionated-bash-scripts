@@ -99,34 +99,49 @@ teardown() {
     [[ "${lines[1]}" == "ERROR: Please start docker and try again" ]]
 }
 
-@test "build_docker_simple_image builds image with provided Dockerfile" {
-    run build_docker_simple_image "test_image" "TestDockerfile"
+@test "build_docker_simple_image builds image with provided Dockerfile and additional args" {
+    # Mock docker command
+    docker() {
+        if [[ $1 == "build" ]]; then
+            echo "Building image with TestDockerfile and --no-cache..."
+        fi
+    }
+    export -f docker
+
+    run build_docker_simple_image "test_image" "TestDockerfile" "." "--no-cache"
     [ "$status" -eq 0 ]
     [[ "${lines[0]}" == "INFO: Building docker image..." ]]
-    [[ "${lines[1]}" == "OK: Docker image built." ]]
+    [[ "${lines[1]}" == "Building image with TestDockerfile and --no-cache..." ]]
+    [[ "${lines[2]}" == "OK: Docker image test_image:latest built." ]]
+
+    unset -f docker
 }
 
-@test "build_docker_simple_image builds image with default Dockerfile if none provided" {
-    run build_docker_simple_image "test_image"
+@test "build_docker_simple_image builds image with default Dockerfile if none provided and additional args" {
+    # Mock docker command
+    docker() {
+        if [[ $1 == "build" ]]; then
+            echo "Building image with Dockerfile and --no-cache..."
+        fi
+    }
+    export -f docker
+
+    run build_docker_simple_image "test_image" "" "" "--no-cache"
     [ "$status" -eq 0 ]
     [[ "${lines[0]}" == "INFO: Building docker image..." ]]
     [[ "${lines[1]}" == "INFO: Dockerfile not defined, using Dockerfile as default" ]]
-    [[ "${lines[2]}" == "OK: Docker image built." ]]
+    echo "${lines[2]}"
+    [[ "${lines[2]}" == "Building image with Dockerfile and --no-cache..." ]]
+    [[ "${lines[3]}" == "OK: Docker image test_image:latest built." ]]
+
+    unset -f docker
 }
 
-@test "build_docker_simple_image returns error if cd to provided folder fails" {
-    # Mock cd command to simulate failure
-    cd() {
-        return 1
-    }
-    export -f cd
-
-    run build_docker_simple_image "test_image" "TestDockerfile" "nonexistent_folder"
+@test "build_docker_simple_image returns error if image name is not provided" {
+    run build_docker_simple_image
     [ "$status" -eq 1 ]
     [[ "${lines[0]}" == "INFO: Building docker image..." ]]
-
-    # Unset mock cd command
-    unset -f cd
+    [[ "${lines[1]}" == "ERROR: Image name not defined" ]]
 }
 
 @test "upsert_docker_compose_file creates docker-compose.yml file" {

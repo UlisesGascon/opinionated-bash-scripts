@@ -31,22 +31,36 @@ check_docker_installed(){
 build_docker_simple_image(){
     image_name=$1
     dockerfile=$2
-    folder=$3
+    target_directory=$3
+    additional_args=$4
 
     echo "INFO: Building docker image..."
+
+    if [ -z "$image_name" ]; then
+        echo "ERROR: Image name not defined"
+        exit 1
+    fi
 
     if [ -z "$dockerfile" ]; then
         dockerfile="Dockerfile"
         echo "INFO: Dockerfile not defined, using $dockerfile as default"
     fi
 
-    if [ -n "$folder" ]; then
-        cd "$folder" || exit 1
-    fi
+    (
+        if [ -n "$target_directory" ]; then
+            cd "$target_directory" || exit 1
+        fi
 
-    docker build -t "$image_name":latests -f "$dockerfile" .
-    echo "OK: Docker image built."
-}  
+        if [ -n "$additional_args" ]; then
+            # shellcheck disable=SC2086
+            # Spread additional args is a expected behavior
+            docker build -t "$image_name":latest -f "$dockerfile" $additional_args .
+        else
+            docker build -t "$image_name":latest -f "$dockerfile" .
+        fi
+    )
+    echo "OK: Docker image $image_name:latest built."
+}
 
 upsert_docker_compose_file() {
     echo "
