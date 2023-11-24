@@ -41,17 +41,3 @@ check_local_mqtt_availability(){
         exit 1
     fi
 }
-
-check_local_websockets_availability() {
-    port=$1
-    if [ -z "$port" ]; then
-        exit 1
-    fi
-    response=$(curl --include --no-buffer --header "Connection: Upgrade" --header "Upgrade: websocket" --header "Host: localhost:$port" --header "Origin: http://localhost:$port" --header "Sec-WebSocket-Key: SGVsbG8sIHdvcmxkIQ==" --header "Sec-WebSocket-Version: 13" "http://localhost:$port" 2>/dev/null)
-    if echo "$response" | grep "HTTP/1.1 101 Switching Protocols" >/dev/null; then
-        echo "OK: WebSocket is running on port $port"
-    else
-        echo "ERROR: WebSocket is not running on port $port"
-        exit 1
-    fi
-}

@@ -71,37 +71,6 @@ teardown() {
     [[ "${lines[1]}" == "SOLUTION: install the dependency and try again!" ]]
 }
 
-@test "check_local_websockets_availability returns error if no port is provided" {
-    run check_local_websockets_availability ""
-    [ "$status" -eq 1 ]
-}
-
-@test "check_local_websockets_availability returns success if websocket is running on port" {
-    # Mock curl command to simulate successful WebSocket handshake
-    curl() {
-        echo "HTTP/1.1 101 Switching Protocols"
-        return 0
-    }
-    export -f curl
-
-    run check_local_websockets_availability "8080"
-    [ "$status" -eq 0 ]
-    [[ "${lines[0]}" == "OK: WebSocket is running on port 8080" ]]
-}
-
-@test "check_local_websockets_availability returns error if websocket is not running on port" {
-    # Mock curl command to simulate unsuccessful WebSocket handshake
-    curl() {
-        echo "HTTP/1.1 404 Not Found"
-        return 0
-    }
-    export -f curl
-
-    run check_local_websockets_availability "8081"
-    [ "$status" -eq 1 ]
-    [[ "${lines[0]}" == "ERROR: WebSocket is not running on port 8081" ]]
-}
-
 @test "check_local_mqtt_availability returns success if MQTT is running on port 1883" {
     run check_local_mqtt_availability
     [ "$status" -eq 0 ]
