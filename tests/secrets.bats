@@ -62,3 +62,26 @@ teardown() {
 }
 
 
+@test "check_environmental_variable_value returns success if environment variable value is in the allowed values (case: single value)" {
+    run check_environmental_variable_value "TEST_SECRET_ONE" "one"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "OK: Validated TEST_SECRET_ONE with the allowed values" ]]
+}
+
+@test "check_environmental_variable_value returns success if environment variable value is in the allowed values (case: multiple values)" {
+    run check_environmental_variable_value "TEST_SECRET_ONE" "random" "one"
+    [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "OK: Validated TEST_SECRET_ONE with the allowed values" ]]
+}
+
+@test "check_environmental_variable_value returns error if environment variable is not set" {
+    run check_environmental_variable_value INVENTED_VARIABLE "exists"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "Error: Invalid INVENTED_VARIABLE is not set" ]]
+}
+
+@test "check_environmental_variable_value returns error if environment variable value is not in the allowed values" {
+    run check_environmental_variable_value TEST_SECRET_ONE "two", "other"
+    [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "Error: Invalid TEST_SECRET_ONE has an invalid value" ]]
+}
