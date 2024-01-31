@@ -6,6 +6,7 @@ setup() {
     # Create a temporary .env file for testing
     echo "MY_SECRET=test" > .env
     echo "MY_OTHER_SECRET=test" >> secrets
+    echo "ANOTHER_SECRET=test2" >> secrets
     export TEST_SECRET_ONE=one
     export TEST_SECRET_TWO=two
 }
@@ -16,23 +17,49 @@ teardown() {
     rm secrets
     unset TEST_SECRET_ONE
     unset TEST_SECRET_TWO
+    unset ANOTHER_SECRET
+    unset MY_OTHER_SECRET
+    unset MY_SECRET
 }
 
 @test "load_secrets loads secrets from .env file correctly" {
     run load_secrets
     [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Loading secrets from .env file in mode: hard." ]]
     [[ "${lines[2]}" == "OK: secrets loaded from .env file." ]]
 }
 
 @test "load_secrets loads secrets from custom file correctly" {
     run load_secrets secrets
     [ "$status" -eq 0 ]
+    [[ "${lines[0]}" == "INFO: Loading secrets from secrets file in mode: hard." ]]
     [[ "${lines[2]}" == "OK: secrets loaded from secrets file." ]]
+}
+
+@test "load_secrets in soft mode does not overwrite existing environment variables" {
+    ANOTHER_SECRET="existing_value"
+    # Avoid subshell and do a direct run, https://bats-core.readthedocs.io/en/stable/gotchas.html#why-can-t-my-function-return-results-via-a-variable-when-using-run
+    # @TODO: Refactor to avoid this
+    load_secrets secrets soft
+    # Check that the environment variable has not been overwritten
+    [ "$ANOTHER_SECRET" == "existing_value" ]
+    [ "$MY_OTHER_SECRET" == "test" ]
+}
+
+@test "load_secrets in hard mode does overwrite existing environment variables" {
+    ANOTHER_SECRET="existing_value"
+    # Avoid subshell and do a direct run, https://bats-core.readthedocs.io/en/stable/gotchas.html#why-can-t-my-function-return-results-via-a-variable-when-using-run
+    # @TODO: Refactor to avoid this
+    load_secrets secrets hard
+    # Check that the environment variable has not been overwritten
+    [ "$ANOTHER_SECRET" == "test2" ]
+    [ "$MY_OTHER_SECRET" == "test" ]
 }
 
 @test "load_secrets returns error if the custom file does not exist" {
     run load_secrets notfound
     [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "INFO: Loading secrets from notfound file in mode: hard." ]]
     [[ "${lines[1]}" == "ERROR: notfound file does not exist." ]]
     [[ "${lines[2]}" == "SOLUTION: Please create a notfound file with the minimum values expected and try again." ]]
 }
@@ -41,6 +68,7 @@ teardown() {
     rm .env
     run load_secrets notfound
     [ "$status" -eq 1 ]
+    [[ "${lines[0]}" == "INFO: Loading secrets from notfound file in mode: hard." ]]
     [[ "${lines[1]}" == "ERROR: notfound file does not exist." ]]
     [[ "${lines[2]}" == "SOLUTION: Please create a notfound file with the minimum values expected and try again." ]]
 }
@@ -60,7 +88,6 @@ teardown() {
     [[ "${lines[1]}" == "ERROR: INVENTED is not set." ]]
     [[ "${lines[2]}" == "SOLUTION: Please set the INVENTED environment variable." ]]
 }
-
 
 @test "check_environmental_variable_value returns success if environment variable value is in the allowed values (case: single value)" {
     run check_environmental_variable_value "TEST_SECRET_ONE" "one"
